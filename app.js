@@ -8,6 +8,8 @@ const filterOption = document.querySelector('.filter-todo');
 // Event Listeners
 document.addEventListener('DOMContentLoaded', getTodos);
 
+
+
 todoButton.addEventListener('click', addTodo);
 
 todoList.addEventListener('click', deleteCheck);
@@ -62,6 +64,7 @@ function deleteCheck(e) {
 
         // Animation
         todo.classList.add("fall");
+        removeLocalTodos(todo);
         todo.addEventListener('transitionend', function () {
             todo.remove();
         });
@@ -122,8 +125,6 @@ function saveLocalTodos(todo) {
 }
 
 function getTodos() {
-
-    console.log('hello')
     // Check --- Do I already have thing in there?
     let todos;
     // If have the array (todo itens)
@@ -161,4 +162,25 @@ function getTodos() {
         // Append to list
         todoList.appendChild(todoDiv);
     })
+}
+
+function removeLocalTodos(todo) {
+    // Check --- Do I already have thing in there?
+    let todos;
+    // If have the array (todo itens)
+    if (localStorage.getItem('todos') === null) {
+        // Create an empty array
+        todos = [];
+    } else {
+        // Get the array
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    // When the To Do is deleted, we access the text of the array that is the To Do text. 
+    // With the To Do text we serch what is its position, to remove it
+    const todoIndex = todo.children[0].innerText;
+    todos.splice(todos.indexOf(todoIndex), 1); // remove 1 item 
+
+    // Remove from localStorage
+    localStorage.setItem('todos', JSON.stringify(todos));
 }
